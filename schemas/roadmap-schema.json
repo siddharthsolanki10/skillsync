@@ -1,0 +1,375 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Career Roadmap Schema",
+  "description": "Schema for AI-generated career roadmaps with chart visualization support",
+  "type": "object",
+  "required": ["roadmap_json", "roadmap_doc"],
+  "properties": {
+    "roadmap_json": {
+      "type": "object",
+      "required": [
+        "id",
+        "title",
+        "field",
+        "level",
+        "overview",
+        "phases",
+        "connections",
+        "metadata"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the roadmap"
+        },
+        "title": {
+          "type": "string",
+          "description": "Human-readable title of the roadmap",
+          "example": "Full-Stack Web Development Career Path"
+        },
+        "field": {
+          "type": "string",
+          "description": "Career field/domain",
+          "enum": [
+            "Web Development",
+            "Mobile Development",
+            "Data Science",
+            "Machine Learning",
+            "DevOps",
+            "Cybersecurity",
+            "UI/UX Design",
+            "Product Management",
+            "Digital Marketing",
+            "Cloud Computing"
+          ]
+        },
+        "level": {
+          "type": "string",
+          "description": "Skill level of the roadmap",
+          "enum": ["Beginner", "Intermediate", "Advanced", "Expert"]
+        },
+        "overview": {
+          "type": "object",
+          "required": ["description", "duration", "difficulty", "outcomes"],
+          "properties": {
+            "description": {
+              "type": "string",
+              "description": "Brief overview of the career path"
+            },
+            "duration": {
+              "type": "string",
+              "description": "Estimated total duration",
+              "example": "12-18 months"
+            },
+            "difficulty": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 5,
+              "description": "Difficulty rating from 1-5"
+            },
+            "outcomes": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Expected career outcomes"
+            }
+          }
+        },
+        "phases": {
+          "type": "array",
+          "description": "Main learning phases in chronological order",
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "title",
+              "description",
+              "duration",
+              "order",
+              "steps"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Unique phase identifier",
+                "pattern": "^phase-[0-9]+$"
+              },
+              "title": {
+                "type": "string",
+                "description": "Phase title",
+                "example": "Foundation Building"
+              },
+              "description": {
+                "type": "string",
+                "description": "Detailed phase description"
+              },
+              "duration": {
+                "type": "string",
+                "description": "Estimated phase duration",
+                "example": "3-4 months"
+              },
+              "order": {
+                "type": "integer",
+                "minimum": 1,
+                "description": "Phase order in the roadmap"
+              },
+              "color": {
+                "type": "string",
+                "pattern": "^#[0-9A-Fa-f]{6}$",
+                "description": "Hex color for chart visualization"
+              },
+              "steps": {
+                "type": "array",
+                "description": "Individual learning steps within the phase",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "id",
+                    "title",
+                    "description",
+                    "type",
+                    "duration",
+                    "order"
+                  ],
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "description": "Unique step identifier",
+                      "pattern": "^step-[0-9]+$"
+                    },
+                    "title": {
+                      "type": "string",
+                      "description": "Step title",
+                      "example": "Learn HTML & CSS Fundamentals"
+                    },
+                    "description": {
+                      "type": "string",
+                      "description": "Detailed step description"
+                    },
+                    "type": {
+                      "type": "string",
+                      "enum": [
+                        "course",
+                        "project",
+                        "certification",
+                        "practice",
+                        "reading"
+                      ],
+                      "description": "Type of learning activity"
+                    },
+                    "duration": {
+                      "type": "string",
+                      "description": "Estimated step duration",
+                      "example": "2-3 weeks"
+                    },
+                    "order": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "description": "Step order within the phase"
+                    },
+                    "difficulty": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 5,
+                      "description": "Step difficulty rating"
+                    },
+                    "skills": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "Skills learned in this step"
+                    },
+                    "prerequisites": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "Required previous steps or knowledge"
+                    },
+                    "resources": {
+                      "type": "array",
+                      "description": "Learning resources for this step",
+                      "items": {
+                        "type": "object",
+                        "required": ["title", "type", "url"],
+                        "properties": {
+                          "title": {
+                            "type": "string",
+                            "description": "Resource title"
+                          },
+                          "type": {
+                            "type": "string",
+                            "enum": [
+                              "video",
+                              "article",
+                              "course",
+                              "book",
+                              "documentation",
+                              "tutorial"
+                            ],
+                            "description": "Type of resource"
+                          },
+                          "url": {
+                            "type": "string",
+                            "format": "uri",
+                            "description": "Resource URL"
+                          },
+                          "duration": {
+                            "type": "string",
+                            "description": "Resource duration (if applicable)"
+                          },
+                          "free": {
+                            "type": "boolean",
+                            "description": "Whether the resource is free"
+                          }
+                        }
+                      }
+                    },
+                    "projects": {
+                      "type": "array",
+                      "description": "Practice projects for this step",
+                      "items": {
+                        "type": "object",
+                        "required": ["title", "description", "difficulty"],
+                        "properties": {
+                          "title": {
+                            "type": "string",
+                            "description": "Project title"
+                          },
+                          "description": {
+                            "type": "string",
+                            "description": "Project description"
+                          },
+                          "difficulty": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 5,
+                            "description": "Project difficulty"
+                          },
+                          "estimatedHours": {
+                            "type": "integer",
+                            "description": "Estimated hours to complete"
+                          },
+                          "technologies": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            },
+                            "description": "Technologies used in the project"
+                          }
+                        }
+                      }
+                    },
+                    "milestones": {
+                      "type": "array",
+                      "description": "Achievement milestones for this step",
+                      "items": {
+                        "type": "object",
+                        "required": ["title", "description"],
+                        "properties": {
+                          "title": {
+                            "type": "string",
+                            "description": "Milestone title"
+                          },
+                          "description": {
+                            "type": "string",
+                            "description": "What the user should achieve"
+                          },
+                          "verification": {
+                            "type": "string",
+                            "description": "How to verify the milestone"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "connections": {
+          "type": "array",
+          "description": "Relationships between steps for chart visualization",
+          "items": {
+            "type": "object",
+            "required": ["from", "to", "type"],
+            "properties": {
+              "from": {
+                "type": "string",
+                "description": "Source step ID"
+              },
+              "to": {
+                "type": "string",
+                "description": "Target step ID"
+              },
+              "type": {
+                "type": "string",
+                "enum": ["prerequisite", "recommended", "parallel", "optional"],
+                "description": "Type of connection"
+              },
+              "label": {
+                "type": "string",
+                "description": "Optional connection label"
+              }
+            }
+          }
+        },
+        "metadata": {
+          "type": "object",
+          "description": "Additional metadata for the roadmap",
+          "properties": {
+            "createdAt": {
+              "type": "string",
+              "format": "date-time",
+              "description": "When the roadmap was created"
+            },
+            "aiModel": {
+              "type": "string",
+              "description": "AI model used to generate the roadmap"
+            },
+            "version": {
+              "type": "string",
+              "description": "Roadmap schema version"
+            },
+            "tags": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Tags for categorization"
+            },
+            "industry": {
+              "type": "string",
+              "description": "Target industry for this career path"
+            },
+            "salaryRange": {
+              "type": "object",
+              "properties": {
+                "min": {
+                  "type": "integer",
+                  "description": "Minimum expected salary"
+                },
+                "max": {
+                  "type": "integer",
+                  "description": "Maximum expected salary"
+                },
+                "currency": {
+                  "type": "string",
+                  "default": "USD"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "roadmap_doc": {
+      "type": "string",
+      "description": "Markdown documentation for the roadmap",
+      "contentMediaType": "text/markdown"
+    }
+  }
+}

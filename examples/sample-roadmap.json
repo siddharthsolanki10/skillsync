@@ -1,0 +1,300 @@
+{
+  "roadmap_json": {
+    "id": "web-dev-beginner-001",
+    "title": "Full-Stack Web Development Career Path",
+    "field": "Web Development",
+    "level": "Beginner",
+    "overview": {
+      "description": "A comprehensive roadmap to become a full-stack web developer, covering front-end, back-end, and essential tools for modern web development.",
+      "duration": "12-18 months",
+      "difficulty": 3,
+      "outcomes": [
+        "Build responsive web applications",
+        "Work with modern JavaScript frameworks",
+        "Develop RESTful APIs and databases",
+        "Deploy applications to production",
+        "Collaborate using version control"
+      ]
+    },
+    "phases": [
+      {
+        "id": "phase-1",
+        "title": "Foundation Building",
+        "description": "Learn the fundamental technologies and concepts of web development",
+        "duration": "3-4 months",
+        "order": 1,
+        "color": "#2563EB",
+        "steps": [
+          {
+            "id": "step-1",
+            "title": "HTML & CSS Fundamentals",
+            "description": "Master the building blocks of web pages - structure with HTML and styling with CSS",
+            "type": "course",
+            "duration": "3-4 weeks",
+            "order": 1,
+            "difficulty": 2,
+            "skills": [
+              "HTML5",
+              "CSS3",
+              "Semantic HTML",
+              "CSS Grid",
+              "Flexbox",
+              "Responsive Design"
+            ],
+            "prerequisites": [],
+            "resources": [
+              {
+                "title": "MDN HTML Documentation",
+                "type": "documentation",
+                "url": "https://developer.mozilla.org/en-US/docs/Web/HTML",
+                "free": true
+              },
+              {
+                "title": "CSS Grid Complete Guide",
+                "type": "article",
+                "url": "https://css-tricks.com/snippets/css/complete-guide-grid/",
+                "free": true
+              },
+              {
+                "title": "FreeCodeCamp Responsive Web Design",
+                "type": "course",
+                "url": "https://www.freecodecamp.org/learn/responsive-web-design/",
+                "duration": "300 hours",
+                "free": true
+              }
+            ],
+            "projects": [
+              {
+                "title": "Personal Portfolio Website",
+                "description": "Create a responsive portfolio website showcasing your skills and projects",
+                "difficulty": 2,
+                "estimatedHours": 20,
+                "technologies": ["HTML", "CSS", "CSS Grid", "Flexbox"]
+              },
+              {
+                "title": "Landing Page Clone",
+                "description": "Recreate a popular website's landing page to practice layout skills",
+                "difficulty": 3,
+                "estimatedHours": 15,
+                "technologies": ["HTML", "CSS", "Responsive Design"]
+              }
+            ],
+            "milestones": [
+              {
+                "title": "HTML Structure Mastery",
+                "description": "Able to create semantic HTML structure for any webpage",
+                "verification": "Complete HTML validator check with zero errors"
+              },
+              {
+                "title": "CSS Layout Expert",
+                "description": "Can create complex layouts using Grid and Flexbox",
+                "verification": "Build a responsive layout without using floats"
+              }
+            ]
+          },
+          {
+            "id": "step-2",
+            "title": "JavaScript Basics",
+            "description": "Learn programming fundamentals with JavaScript for interactive web pages",
+            "type": "course",
+            "duration": "4-5 weeks",
+            "order": 2,
+            "difficulty": 3,
+            "skills": [
+              "JavaScript ES6+",
+              "DOM Manipulation",
+              "Event Handling",
+              "Async Programming"
+            ],
+            "prerequisites": ["step-1"],
+            "resources": [
+              {
+                "title": "JavaScript.info",
+                "type": "tutorial",
+                "url": "https://javascript.info/",
+                "free": true
+              },
+              {
+                "title": "Eloquent JavaScript",
+                "type": "book",
+                "url": "https://eloquentjavascript.net/",
+                "free": true
+              }
+            ],
+            "projects": [
+              {
+                "title": "Interactive Calculator",
+                "description": "Build a fully functional calculator with JavaScript",
+                "difficulty": 3,
+                "estimatedHours": 12,
+                "technologies": ["JavaScript", "HTML", "CSS"]
+              }
+            ],
+            "milestones": [
+              {
+                "title": "JavaScript Fundamentals",
+                "description": "Understand variables, functions, objects, and control structures",
+                "verification": "Pass JavaScript fundamentals quiz"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "phase-2",
+        "title": "Frontend Mastery",
+        "description": "Advanced frontend development with modern frameworks and tools",
+        "duration": "4-5 months",
+        "order": 2,
+        "color": "#10B981",
+        "steps": [
+          {
+            "id": "step-3",
+            "title": "React.js Development",
+            "description": "Master the most popular frontend framework for building user interfaces",
+            "type": "course",
+            "duration": "6-8 weeks",
+            "order": 1,
+            "difficulty": 4,
+            "skills": [
+              "React",
+              "JSX",
+              "Hooks",
+              "State Management",
+              "Component Architecture"
+            ],
+            "prerequisites": ["step-2"],
+            "resources": [
+              {
+                "title": "Official React Documentation",
+                "type": "documentation",
+                "url": "https://react.dev/",
+                "free": true
+              },
+              {
+                "title": "React - The Complete Guide",
+                "type": "course",
+                "url": "https://www.udemy.com/course/react-the-complete-guide-incl-redux/",
+                "duration": "48 hours",
+                "free": false
+              }
+            ],
+            "projects": [
+              {
+                "title": "Todo App with React",
+                "description": "Build a feature-rich todo application with CRUD operations",
+                "difficulty": 3,
+                "estimatedHours": 25,
+                "technologies": ["React", "JavaScript", "CSS"]
+              },
+              {
+                "title": "Weather Dashboard",
+                "description": "Create a weather app that fetches data from external APIs",
+                "difficulty": 4,
+                "estimatedHours": 30,
+                "technologies": ["React", "API Integration", "CSS Modules"]
+              }
+            ],
+            "milestones": [
+              {
+                "title": "React Component Master",
+                "description": "Can build reusable components with proper state management",
+                "verification": "Create a component library with 5+ reusable components"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "phase-3",
+        "title": "Backend Development",
+        "description": "Server-side programming and database management",
+        "duration": "3-4 months",
+        "order": 3,
+        "color": "#F59E0B",
+        "steps": [
+          {
+            "id": "step-4",
+            "title": "Node.js & Express.js",
+            "description": "Build scalable server-side applications with Node.js",
+            "type": "course",
+            "duration": "5-6 weeks",
+            "order": 1,
+            "difficulty": 4,
+            "skills": [
+              "Node.js",
+              "Express.js",
+              "RESTful APIs",
+              "Middleware",
+              "Authentication"
+            ],
+            "prerequisites": ["step-3"],
+            "resources": [
+              {
+                "title": "Node.js Official Docs",
+                "type": "documentation",
+                "url": "https://nodejs.org/en/docs/",
+                "free": true
+              }
+            ],
+            "projects": [
+              {
+                "title": "REST API for Blog",
+                "description": "Create a complete RESTful API for a blog application",
+                "difficulty": 4,
+                "estimatedHours": 40,
+                "technologies": ["Node.js", "Express.js", "MongoDB"]
+              }
+            ],
+            "milestones": [
+              {
+                "title": "API Development Expert",
+                "description": "Can build secure, scalable REST APIs",
+                "verification": "Deploy a working API with authentication"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "connections": [
+      {
+        "from": "step-1",
+        "to": "step-2",
+        "type": "prerequisite",
+        "label": "Foundation Required"
+      },
+      {
+        "from": "step-2",
+        "to": "step-3",
+        "type": "prerequisite",
+        "label": "JavaScript Knowledge Required"
+      },
+      {
+        "from": "step-3",
+        "to": "step-4",
+        "type": "recommended",
+        "label": "Frontend Experience Helpful"
+      }
+    ],
+    "metadata": {
+      "createdAt": "2025-09-13T10:00:00Z",
+      "aiModel": "GPT-4",
+      "version": "1.0",
+      "tags": [
+        "web-development",
+        "full-stack",
+        "beginner",
+        "javascript",
+        "react"
+      ],
+      "industry": "Technology",
+      "salaryRange": {
+        "min": 60000,
+        "max": 120000,
+        "currency": "USD"
+      }
+    }
+  },
+  "roadmap_doc": "# Full-Stack Web Development Career Roadmap\n\n## Overview\n\nWelcome to your journey into full-stack web development! This comprehensive roadmap will guide you from complete beginner to job-ready developer in 12-18 months.\n\n## What You'll Learn\n\n### Phase 1: Foundation Building (3-4 months)\n- **HTML & CSS**: Master the structure and styling of web pages\n- **JavaScript Basics**: Learn programming fundamentals and interactivity\n\n### Phase 2: Frontend Mastery (4-5 months)\n- **React.js**: Build dynamic user interfaces with the most popular framework\n- **Modern Tools**: Webpack, npm, and development workflow\n\n### Phase 3: Backend Development (3-4 months)\n- **Node.js & Express**: Server-side JavaScript development\n- **Databases**: MongoDB and data persistence\n- **APIs**: RESTful services and authentication\n\n## Career Outcomes\n\nAfter completing this roadmap, you'll be able to:\n- Build full-stack web applications from scratch\n- Work with modern development tools and frameworks\n- Collaborate effectively in development teams\n- Deploy applications to production environments\n\n## Salary Expectations\n\n- **Entry Level**: $60,000 - $80,000\n- **Mid Level**: $80,000 - $100,000\n- **Senior Level**: $100,000 - $120,000+\n\n## Tips for Success\n\n1. **Practice Daily**: Code every day, even if it's just 30 minutes\n2. **Build Projects**: Apply what you learn in real projects\n3. **Join Communities**: Connect with other developers online\n4. **Stay Updated**: Web development evolves quickly\n5. **Be Patient**: Learning to code takes time and persistence\n\n## Next Steps\n\n1. Start with HTML & CSS fundamentals\n2. Set up your development environment\n3. Create your first project\n4. Track your progress and celebrate milestones\n\nGood luck on your web development journey! 🚀"
+}

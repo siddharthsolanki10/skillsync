@@ -1,0 +1,149 @@
+{
+  "name": "SkillSync Roadmap Generation",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "skillsync-roadmap-generation",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-trigger",
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Validate and prepare data for OpenAI\nconst data = $input.first().json;\n\n// Validate required fields\nconst requiredFields = ['field', 'level', 'userId', 'roadmapId', 'callbackUrl'];\nconst missingFields = requiredFields.filter(field => !data[field]);\n\nif (missingFields.length > 0) {\n  throw new Error(`Missing required fields: ${missingFields.join(', ')}`);\n}\n\n// Create prompt for OpenAI\nconst prompt = `Create a comprehensive learning roadmap for:\n\nCareer Field: ${data.field}\nCurrent Level: ${data.level}\nCustom Requirements: ${data.customRequirements || 'None'}\n\nGenerate a detailed roadmap following this JSON schema:\n{\n  \"title\": \"string\",\n  \"description\": \"string\",\n  \"careerField\": \"string\",\n  \"estimatedDuration\": \"string\",\n  \"difficulty\": \"string\",\n  \"phases\": [\n    {\n      \"id\": \"string\",\n      \"title\": \"string\",\n      \"description\": \"string\",\n      \"order\": number,\n      \"duration\": \"string\",\n      \"color\": \"#hexcolor\",\n      \"prerequisites\": [\"array\"],\n      \"learningObjectives\": [\"array\"],\n      \"steps\": [\n        {\n          \"id\": \"string\",\n          \"title\": \"string\",\n          \"description\": \"string\",\n          \"type\": \"lesson|project|assessment|reading\",\n          \"duration\": \"string\",\n          \"difficulty\": 1-5,\n          \"order\": number,\n          \"skills\": [\"array\"],\n          \"resources\": [\n            {\n              \"title\": \"string\",\n              \"type\": \"video|article|course|book|tool\",\n              \"url\": \"string\",\n              \"description\": \"string\",\n              \"difficulty\": 1-5,\n              \"estimatedTime\": \"string\",\n              \"cost\": \"free|paid\",\n              \"rating\": 1-5\n            }\n          ],\n          \"projects\": [\n            {\n              \"title\": \"string\",\n              \"description\": \"string\",\n              \"difficulty\": 1-5,\n              \"estimatedTime\": \"string\",\n              \"skills\": [\"array\"],\n              \"deliverables\": [\"array\"]\n            }\n          ],\n          \"milestones\": [\n            {\n              \"title\": \"string\",\n              \"description\": \"string\",\n              \"criteria\": [\"array\"]\n            }\n          ]\n        }\n      ]\n    }\n  ],\n  \"metadata\": {\n    \"totalSteps\": number,\n    \"totalProjects\": number,\n    \"skillsCount\": number,\n    \"resourcesCount\": number\n  }\n}\n\nEnsure all IDs are unique, phases are ordered logically, and include real resources with URLs.`;\n\nreturn {\n  json: {\n    ...data,\n    prompt,\n    timestamp: new Date().toISOString()\n  }\n};"
+      },
+      "id": "validation-node",
+      "name": "Validate & Prepare",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "resource": "text",
+        "operation": "message",
+        "model": "gpt-4",
+        "prompt": "={{ $json.prompt }}",
+        "options": {
+          "temperature": 0.7,
+          "maxTokens": 4000
+        }
+      },
+      "id": "openai-node",
+      "name": "OpenAI GPT-4",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1,
+      "position": [650, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Parse OpenAI response and format for SkillSync\nconst aiResponse = $input.first().json.message.content;\nconst requestData = $input.first().json;\n\ntry {\n  // Parse the AI response\n  let roadmapData = JSON.parse(aiResponse);\n  \n  // Add SkillSync specific fields\n  roadmapData.userId = requestData.userId;\n  roadmapData.roadmapId = requestData.roadmapId;\n  roadmapData.status = 'completed';\n  roadmapData.workflowId = $workflow.id;\n  roadmapData.generatedAt = new Date().toISOString();\n  \n  return {\n    json: {\n      success: true,\n      roadmap: roadmapData,\n      callbackUrl: requestData.callbackUrl\n    }\n  };\n} catch (error) {\n  return {\n    json: {\n      success: false,\n      error: error.message,\n      rawResponse: aiResponse,\n      callbackUrl: requestData.callbackUrl\n    }\n  };\n}"
+      },
+      "id": "format-node",
+      "name": "Format Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [850, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $json.callbackUrl }}",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "success",
+              "value": "={{ $json.success }}"
+            },
+            {
+              "name": "roadmap",
+              "value": "={{ JSON.stringify($json.roadmap) }}"
+            },
+            {
+              "name": "error",
+              "value": "={{ $json.error }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "callback-node",
+      "name": "Callback to SkillSync",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [1050, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ success: true, message: 'Roadmap generation started', workflowId: $workflow.id }) }}"
+      },
+      "id": "response-node",
+      "name": "Webhook Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [450, 500]
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "Validate & Prepare",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Webhook Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate & Prepare": {
+      "main": [
+        [
+          {
+            "node": "OpenAI GPT-4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI GPT-4": {
+      "main": [
+        [
+          {
+            "node": "Format Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Response": {
+      "main": [
+        [
+          {
+            "node": "Callback to SkillSync",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {},
+  "id": "skillsync-roadmap-generation"
+}
