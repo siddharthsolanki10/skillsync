@@ -32,6 +32,7 @@ const RoadmapGenerator = () => {
   const [isGenerating, setIsGenerating] = useState(false);
   const [generationStatus, setGenerationStatus] = useState(null);
   const [errors, setErrors] = useState({});
+  const [roadmap, setRoadmap] = useState(null);
 
   const careerFields = [
     {
@@ -203,100 +204,68 @@ const RoadmapGenerator = () => {
     setIsGenerating(true);
     setGenerationStatus({
       type: "info",
-      message: "Initializing AI roadmap generation...",
+      message: "Connecting to AI... Please wait, this may take up to 60 seconds.",
     });
 
     try {
-      // Start the roadmap generation
-      const response = await fetch("/api/roadmaps/generate", {
+      // Map careerField ID to readable name
+      const fieldTitle = careerFields.find(f => f.id === formData.careerField)?.title || formData.careerField;
+      
+      // Prepare payload matching backend expectations
+      const payload = {
+        careerField: fieldTitle,
+        currentLevel: formData.currentLevel,
+        targetLevel: formData.targetLevel,
+        timeCommitment: formData.timeCommitment,
+        learningStyle: formData.learningStyle,
+        specificGoals: formData.specificGoals,
+        preferredResources: formData.preferredResources,
+      };
+
+      // Call the API (synchronous - waits for n8n response)
+      const token = localStorage.getItem("token");
+      const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5000";
+      
+      const response = await fetch(`${apiUrl}/api/roadmaps/generate`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          ...(token && { Authorization: `Bearer ${token}` }),
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(payload),
       });
+
+      const data = await response.json();
 
       if (!response.ok) {
-        throw new Error("Failed to start roadmap generation");
+        throw new Error(data.message || data.error || "Failed to generate roadmap");
       }
 
-      const { roadmapId, n8nWorkflowId } = await response.json();
+      if (data.success && data.data) {
+        setGenerationStatus({
+          type: "success",
+          message: "Roadmap generated successfully! Redirecting to your personalized learning path...",
+        });
 
-      setGenerationStatus({
-        type: "info",
-        message:
-          "AI is analyzing your requirements and generating personalized roadmap...",
-      });
-
-      // Poll for completion
-      const pollInterval = setInterval(async () => {
-        try {
-          const statusResponse = await fetch(
-            `/api/roadmaps/${roadmapId}/status`,
-            {
-              headers: {
-                Authorization: `Bearer ${localStorage.getItem("token")}`,
-              },
-            }
-          );
-
-          if (!statusResponse.ok) {
-            throw new Error("Failed to check generation status");
-          }
-
-          const status = await statusResponse.json();
-
-          if (status.status === "completed") {
-            clearInterval(pollInterval);
-            setGenerationStatus({
-              type: "success",
-              message:
-                "Roadmap generated successfully! Redirecting to your personalized learning path...",
-            });
-
-            setTimeout(() => {
-              navigate(`/roadmap/${roadmapId}`);
-            }, 2000);
-          } else if (status.status === "failed") {
-            clearInterval(pollInterval);
-            setGenerationStatus({
-              type: "error",
-              message: `Generation failed: ${
-                status.error || "Unknown error occurred"
-              }`,
-            });
-            setIsGenerating(false);
+        // Store roadmap data
+        setRoadmap(data.data);
+        
+        // Navigate to roadmap view after a brief delay
+        setTimeout(() => {
+          if (data.roadmap?.roadmapId) {
+            navigate(`/roadmap/${data.roadmap.roadmapId}`);
           } else {
-            // Update progress message based on current step
-            const messages = {
-              processing: "Analyzing your requirements...",
-              generating: "AI is creating your personalized roadmap...",
-              structuring: "Organizing learning phases and steps...",
-              finalizing: "Adding resources and finalizing details...",
-            };
-
-            setGenerationStatus({
-              type: "info",
-              message:
-                messages[status.currentStep] || "Processing your request...",
-            });
+            navigate("/dashboard");
           }
-        } catch (error) {
-          console.error("Error polling status:", error);
-          clearInterval(pollInterval);
-          setGenerationStatus({
-            type: "error",
-            message: "Error checking generation status. Please try again.",
-          });
-          setIsGenerating(false);
-        }
-      }, 3000);
+        }, 2000);
+      } else {
+        throw new Error("Invalid response from server");
+      }
     } catch (error) {
       console.error("Error generating roadmap:", error);
       setGenerationStatus({
         type: "error",
-        message: "Failed to start roadmap generation. Please try again.",
+        message: error.message || "Failed to generate roadmap. Please check your connection and try again.",
       });
       setIsGenerating(false);
     }

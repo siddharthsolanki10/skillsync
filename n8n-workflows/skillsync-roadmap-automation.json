@@ -1,0 +1,123 @@
+{
+  "name": "SkillSync_Roadmap_Automation",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "roadmap-generator",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "id": "webhook-trigger",
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300],
+      "webhookId": "roadmap-generator"
+    },
+    {
+      "parameters": {
+        "jsCode": "const body = $json;\n\nconst prompt = `You are an AI Roadmap Assistant for SkillSync. \nGenerate a complete and structured learning roadmap in JSON format.\n\n### Input Details:\nCareer Field: ${body.careerField}\nCurrent Level: ${body.currentLevel}\nTarget Level: ${body.targetLevel}\nTime Commitment: ${body.timeCommitment} hrs/week\nLearning Style: ${body.learningStyle}\nSpecific Goals: ${body.specificGoals}\nPreferred Resources: ${body.preferredResources?.join(\", \") || \"Any\"}\n\n### Output Format:\n{\n  \"roadmap_json\": {\n    \"title\": \"Frontend Developer Roadmap\",\n    \"overview\": {\n      \"description\": \"Comprehensive roadmap to become a frontend developer\",\n      \"duration\": \"6 months\",\n      \"difficulty\": 3,\n      \"outcomes\": [\"Build responsive websites\", \"Master React\", \"Deploy applications\"]\n    },\n    \"phases\": [\n      {\n        \"id\": \"phase-1\",\n        \"title\": \"Basics of Web\",\n        \"description\": \"Learn HTML, CSS, and JavaScript fundamentals\",\n        \"duration\": \"2 Weeks\",\n        \"order\": 1,\n        \"color\": \"#3B82F6\",\n        \"steps\": [\n          {\n            \"id\": \"step-1-1\",\n            \"title\": \"HTML Fundamentals\",\n            \"description\": \"Learn HTML structure, semantic elements, and forms\",\n            \"type\": \"course\",\n            \"duration\": \"5 days\",\n            \"order\": 1,\n            \"difficulty\": 1,\n            \"skills\": [\"HTML\", \"Semantic HTML\"],\n            \"prerequisites\": [],\n            \"resources\": [\n              {\n                \"title\": \"FreeCodeCamp HTML\",\n                \"type\": \"course\",\n                \"url\": \"https://www.freecodecamp.org/learn/2022/responsive-web-design/\",\n                \"duration\": \"20 hours\",\n                \"free\": true\n              }\n            ],\n            \"projects\": [],\n            \"milestones\": []\n          }\n        ]\n      },\n      {\n        \"id\": \"phase-2\",\n        \"title\": \"Frontend Frameworks\",\n        \"description\": \"Master React and state management\",\n        \"duration\": \"3 Weeks\",\n        \"order\": 2,\n        \"color\": \"#10B981\",\n        \"steps\": [\n          {\n            \"id\": \"step-2-1\",\n            \"title\": \"React Basics\",\n            \"description\": \"Learn React components, props, and hooks\",\n            \"type\": \"course\",\n            \"duration\": \"1 week\",\n            \"order\": 1,\n            \"difficulty\": 2,\n            \"skills\": [\"React\", \"Components\", \"Hooks\"],\n            \"prerequisites\": [\"step-1-1\"],\n            \"resources\": [\n              {\n                \"title\": \"React Official Tutorial\",\n                \"type\": \"course\",\n                \"url\": \"https://react.dev/learn\",\n                \"duration\": \"15 hours\",\n                \"free\": true\n              }\n            ],\n            \"projects\": [\n              {\n                \"title\": \"Todo App\",\n                \"description\": \"Build a todo list application\",\n                \"difficulty\": 2,\n                \"estimatedHours\": 8,\n                \"technologies\": [\"React\", \"CSS\"]\n              }\n            ],\n            \"milestones\": []\n          }\n        ]\n      }\n    ],\n    \"connections\": [\n      {\n        \"from\": \"phase-1\",\n        \"to\": \"phase-2\",\n        \"type\": \"prerequisite\"\n      }\n    ],\n    \"metadata\": {\n      \"aiModel\": \"gpt-4o-mini\",\n      \"version\": \"1.0\",\n      \"tags\": [\"frontend\", \"web-development\"],\n      \"industry\": \"Web Development\"\n    }\n  },\n  \"roadmap_doc\": \"Step-by-step journey to become a frontend developer, covering core web fundamentals to advanced frameworks...\"\n}\n\nIMPORTANT: Return ONLY valid JSON. Do not include markdown code blocks or any text outside the JSON object. Ensure all IDs are unique and the structure matches exactly.\";\n\nreturn [{\n  json: {\n    ...body,\n    formattedPrompt: prompt\n  }\n}];"
+      },
+      "id": "prompt-builder",
+      "name": "Code Node (Prompt Builder)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "resource": "text",
+        "operation": "message",
+        "model": "gpt-4o-mini",
+        "prompt": "={{ $json.formattedPrompt }}",
+        "options": {
+          "temperature": 0.7,
+          "maxTokens": 3000
+        }
+      },
+      "id": "openai-node",
+      "name": "OpenAI Node",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1,
+      "position": [650, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Parse OpenAI response\nconst aiResponse = $json.choices?.[0]?.message?.content || $json.message?.content || $json.text || \"\";\nlet parsed;\n\ntry {\n  // Try parsing directly\n  parsed = JSON.parse(aiResponse);\n} catch {\n  // Try extracting from markdown code blocks\n  const match = aiResponse.match(/```json\\n([\\s\\S]*?)\\n```/);\n  if (match) {\n    parsed = JSON.parse(match[1]);\n  } else {\n    // Try extracting JSON object\n    const jsonMatch = aiResponse.match(/\\{[\\s\\S]*\\}/);\n    if (jsonMatch) {\n      parsed = JSON.parse(jsonMatch[0]);\n    } else {\n      // Fallback: create structure from text\n      parsed = { \n        roadmap_json: {}, \n        roadmap_doc: aiResponse \n      };\n    }\n  }\n}\n\n// Ensure proper structure\nif (!parsed.roadmap_json) {\n  parsed = {\n    roadmap_json: parsed,\n    roadmap_doc: parsed.roadmap_doc || \"Generated roadmap documentation\"\n  };\n}\n\nreturn [{\n  json: {\n    roadmap_json: parsed.roadmap_json,\n    roadmap_doc: parsed.roadmap_doc || \"\",\n    generatedAt: new Date().toISOString()\n  }\n}];"
+      },
+      "id": "parser-node",
+      "name": "Code Node (Parser)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [850, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({\n  \"success\": true,\n  \"data\": {\n    \"roadmap_json\": $json.roadmap_json,\n    \"roadmap_doc\": $json.roadmap_doc\n  }\n}) }}"
+      },
+      "id": "response-node",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1050, 300]
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "Code Node (Prompt Builder)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code Node (Prompt Builder)": {
+      "main": [
+        [
+          {
+            "node": "OpenAI Node",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Node": {
+      "main": [
+        [
+          {
+            "node": "Code Node (Parser)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code Node (Parser)": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2024-01-01T00:00:00.000Z",
+  "versionId": "1"
+}
+

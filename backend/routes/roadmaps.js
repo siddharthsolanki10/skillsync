@@ -8,14 +8,19 @@ const { protect } = require("../middleware/auth");
 
 const router = express.Router();
 
-// @desc    Generate new AI roadmap
+// @desc    Generate new AI roadmap (new format with n8n direct response)
 // @route   POST /api/roadmaps/generate
 // @access  Private
 router.post(
   "/generate",
   [
     protect,
+    body("careerField")
+      .optional()
+      .isLength({ min: 1 })
+      .withMessage("Career field is required"),
     body("field")
+      .optional()
       .isIn([
         "Web Development",
         "Mobile Development",
@@ -29,13 +34,18 @@ router.post(
         "Cloud Computing",
       ])
       .withMessage("Please select a valid career field"),
+    body("currentLevel")
+      .optional()
+      .isIn(["beginner", "intermediate", "advanced", "expert", "Beginner", "Intermediate", "Advanced", "Expert"])
+      .withMessage("Please select a valid current skill level"),
+    body("targetLevel")
+      .optional()
+      .isIn(["beginner", "intermediate", "advanced", "expert", "Beginner", "Intermediate", "Advanced", "Expert"])
+      .withMessage("Please select a valid target skill level"),
     body("level")
+      .optional()
       .isIn(["Beginner", "Intermediate", "Advanced", "Expert"])
       .withMessage("Please select a valid skill level"),
-    body("customRequirements")
-      .optional()
-      .isLength({ max: 500 })
-      .withMessage("Custom requirements cannot exceed 500 characters"),
   ],
   async (req, res) => {
     try {
@@ -49,115 +59,172 @@ router.post(
         });
       }
 
-      const { field, level, customRequirements } = req.body;
+      // Support both old and new format
+      const careerField = req.body.careerField || req.body.field;
+      const currentLevel = req.body.currentLevel || req.body.level || "Beginner";
+      const targetLevel = req.body.targetLevel || req.body.level || "Advanced";
+      const timeCommitment = req.body.timeCommitment || "";
+      const learningStyle = req.body.learningStyle || "visual";
+      const specificGoals = req.body.specificGoals || req.body.customRequirements || "";
+      const preferredResources = req.body.preferredResources || [];
+
+      // Map career field to standard format
+      const fieldMap = {
+        "web-development": "Web Development",
+        "data-science": "Data Science",
+        "digital-marketing": "Digital Marketing",
+        "product-management": "Product Management",
+        "design": "UI/UX Design",
+        "project-management": "Project Management",
+      };
+
+      const field = fieldMap[careerField] || careerField || "Web Development";
+      
+      // Normalize levels
+      const normalizeLevel = (level) => {
+        if (!level) return "Beginner";
+        const levelLower = level.toLowerCase();
+        if (levelLower === "beginner") return "Beginner";
+        if (levelLower === "intermediate") return "Intermediate";
+        if (levelLower === "advanced") return "Advanced";
+        if (levelLower === "expert") return "Expert";
+        return "Beginner";
+      };
+
+      const normalizedCurrentLevel = normalizeLevel(currentLevel);
+      const normalizedTargetLevel = normalizeLevel(targetLevel);
+      
       const userId = req.user.id;
-
-      // Check if user already has a roadmap for this field/level combination
-      const existingRoadmap = await Roadmap.findOne({
-        userId,
-        field,
-        level,
-        status: { $in: ["generating", "completed"] },
-      });
-
-      if (existingRoadmap) {
-        return res.status(409).json({
-          success: false,
-          message: "You already have a roadmap for this field and level",
-          roadmap: existingRoadmap,
-        });
-      }
 
       // Generate unique roadmap ID
       const roadmapId = `${field
         .toLowerCase()
-        .replace(/\s+/g, "-")}-${level.toLowerCase()}-${Date.now()}`;
+        .replace(/\s+/g, "-")}-${normalizedTargetLevel.toLowerCase()}-${Date.now()}`;
 
-      // Create initial roadmap record
-      const roadmap = new Roadmap({
-        userId,
-        roadmapId,
-        title: `${field} Career Path - ${level} Level`,
-        field,
-        level,
-        overview: {
-          description: "AI-generated roadmap is being created...",
-          duration: "TBD",
-          difficulty: 3,
-          outcomes: [],
-        },
-        phases: [],
-        connections: [],
-        metadata: {
-          aiModel: "GPT-4",
-          tags: [field.toLowerCase().replace(/\s+/g, "-"), level.toLowerCase()],
-        },
-        documentation: "Generating documentation...",
-        status: "generating",
-      });
-
-      await roadmap.save();
-
-      // Trigger n8n workflow
+      // Call n8n webhook synchronously (wait for response)
       try {
         const n8nWebhookUrl = process.env.N8N_ROADMAP_WEBHOOK_URL;
 
         if (!n8nWebhookUrl) {
-          throw new Error("n8n webhook URL not configured");
+          throw new Error("n8n webhook URL not configured. Please set N8N_ROADMAP_WEBHOOK_URL in your .env file");
         }
 
+        // Prepare payload for n8n
         const n8nPayload = {
-          field,
-          level,
-          userId,
-          roadmapId,
-          customRequirements,
-          callbackUrl: `${process.env.BACKEND_URL}/api/roadmaps/webhook/n8n-callback`,
+          careerField: field,
+          currentLevel: normalizedCurrentLevel,
+          targetLevel: normalizedTargetLevel,
+          timeCommitment: timeCommitment,
+          learningStyle: learningStyle,
+          specificGoals: specificGoals,
+          preferredResources: preferredResources,
         };
 
+        // Call n8n webhook and wait for response
         const n8nResponse = await axios.post(n8nWebhookUrl, n8nPayload, {
-          timeout: 10000,
+          timeout: 60000, // 60 seconds timeout
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${process.env.N8N_WEBHOOK_SECRET}`,
+            ...(process.env.N8N_WEBHOOK_SECRET && {
+              "x-webhook-secret": process.env.N8N_WEBHOOK_SECRET,
+            }),
           },
         });
 
-        // Update roadmap with workflow ID
-        roadmap.workflowId =
-          n8nResponse.data.workflowId || `workflow-${Date.now()}`;
+        // Check if n8n returned success
+        if (!n8nResponse.data.success || !n8nResponse.data.data) {
+          throw new Error("n8n returned an error or invalid response");
+        }
+
+        const { roadmap_json, roadmap_doc } = n8nResponse.data.data;
+
+        // Create roadmap record with AI-generated content
+        const roadmap = new Roadmap({
+          userId,
+          roadmapId,
+          title: roadmap_json.title || `${field} Career Path - ${normalizedTargetLevel} Level`,
+          field,
+          level: normalizedTargetLevel,
+          overview: roadmap_json.overview || {
+            description: "AI-generated roadmap",
+            duration: "TBD",
+            difficulty: 3,
+            outcomes: [],
+          },
+          phases: roadmap_json.phases || [],
+          connections: roadmap_json.connections || [],
+          metadata: {
+            ...roadmap_json.metadata,
+            aiModel: roadmap_json.metadata?.aiModel || "gpt-4o-mini",
+            tags: roadmap_json.metadata?.tags || [field.toLowerCase().replace(/\s+/g, "-")],
+          },
+          documentation: roadmap_doc || "",
+          status: "completed",
+        });
+
         await roadmap.save();
+
+        // Initialize user progress tracking with generated phases
+        const phases = roadmap_json.phases || [];
+        const progressPhases = phases.map((phase) => ({
+          phaseId: phase.id,
+          steps: (phase.steps || []).map((step) => ({
+            stepId: step.id,
+            completed: false,
+            timeSpent: 0,
+          })),
+          overallProgress: 0,
+        }));
+
+        const userProgress = new UserProgress({
+          userId,
+          roadmapId,
+          roadmapObjectId: roadmap._id,
+          phases: progressPhases,
+          overallProgress: 0,
+        });
+        await userProgress.save();
+
+        // Create documentation entry
+        const Documentation = require("../models/Documentation");
+        const documentation = new Documentation({
+          roadmapId,
+          roadmapObjectId: roadmap._id,
+          title: roadmap_json.title || `${field} Roadmap`,
+          markdownContent: roadmap_doc || "",
+          aiGeneration: {
+            model: roadmap_json.metadata?.aiModel || "gpt-4o-mini",
+            generatedAt: new Date(),
+            tokens: {},
+          },
+        });
+        await documentation.save();
+
+        return res.status(200).json({
+          success: true,
+          message: "Roadmap generated successfully",
+          data: {
+            roadmap_json: roadmap.toJSON().roadmap_json,
+            roadmap_doc: roadmap_doc,
+          },
+          roadmap: roadmap.toJSON(),
+          progress: userProgress,
+        });
       } catch (n8nError) {
-        console.error("n8n trigger failed:", n8nError.message);
-
-        // Update roadmap status to failed
-        roadmap.status = "failed";
-        await roadmap.save();
-
+        console.error("n8n error:", n8nError.message);
+        
+        // Return detailed error in development
+        const errorMessage = n8nError.response?.data?.message || n8nError.message || "Failed to generate roadmap";
+        
         return res.status(500).json({
           success: false,
-          message: "Failed to trigger AI roadmap generation",
-          error: n8nError.message,
+          message: "Failed to generate AI roadmap",
+          error: process.env.NODE_ENV === "development" ? errorMessage : "Roadmap generation failed. Please try again.",
+          ...(process.env.NODE_ENV === "development" && {
+            details: n8nError.response?.data,
+          }),
         });
       }
-
-      // Initialize user progress tracking
-      const userProgress = new UserProgress({
-        userId,
-        roadmapId,
-        roadmapObjectId: roadmap._id,
-        phases: [],
-        overallProgress: 0,
-      });
-      await userProgress.save();
-
-      res.status(202).json({
-        success: true,
-        message: "Roadmap generation started",
-        roadmap: roadmap.toJSON(),
-        progress: userProgress,
-        estimatedTime: "2-3 minutes",
-      });
     } catch (error) {
       console.error("Generate roadmap error:", error);
       res.status(500).json({

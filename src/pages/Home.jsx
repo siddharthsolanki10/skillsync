@@ -292,7 +292,7 @@ const Home = () => {
           
           <div className="border-t border-gray-700 mt-8 pt-8 text-center">
             <p className="text-gray-300">
-              © 2024 SkillSync. All rights reserved. Built with ❤️ for students.
+              © 2025 SkillSync. All rights reserved. Built with ❤️ for students.
             </p>
           </div>
         </div>

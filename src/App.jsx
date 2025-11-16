@@ -7,6 +7,8 @@ import Signup from './pages/Signup'
 import Dashboard from './pages/Dashboard'
 import Profile from './pages/Profile'
 import Contact from './pages/Contact'
+import RoadmapGenerator from './pages/RoadmapGenerator'
+import RoadmapView from './pages/RoadmapView'
 import ProtectedRoute from './components/ProtectedRoute'
 
 function App() {
@@ -33,6 +35,22 @@ function App() {
             element={
               <ProtectedRoute>
                 <Profile />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/roadmap/generate" 
+            element={
+              <ProtectedRoute>
+                <RoadmapGenerator />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/roadmap/:id" 
+            element={
+              <ProtectedRoute>
+                <RoadmapView />
               </ProtectedRoute>
             } 
           />
