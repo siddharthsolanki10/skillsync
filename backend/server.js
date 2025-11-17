@@ -12,6 +12,7 @@ const careerRoutes = require("./routes/careers");
 const learningRoutes = require("./routes/learning");
 const contactRoutes = require("./routes/contact");
 const roadmapRoutes = require("./routes/roadmaps");
+const roadmapAdvancedRoutes = require("./routes/roadmaps-advanced");
 const progressRoutes = require("./routes/progress");
 
 const app = express();
@@ -66,6 +67,7 @@ app.use("/api/careers", careerRoutes);
 app.use("/api/learning", learningRoutes);
 app.use("/api/contact", contactRoutes);
 app.use("/api/roadmaps", roadmapRoutes);
+app.use("/api/roadmaps-advanced", roadmapAdvancedRoutes);
 app.use("/api/progress", progressRoutes);
 
 // 404 handler

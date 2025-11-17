@@ -1,14 +1,65 @@
 const express = require('express');
 const router = express.Router();
-const Roadmap = require('../models/Roadmap');
-const auth = require('../middleware/auth');
+const Roadmap = require('../models/Roadmap-Advanced');
+const { protect } = require('../middleware/auth');
+
+/**
+ * POST /api/roadmaps/generate
+ * Webhook endpoint that receives requests from n8n
+ * This triggers the workflow
+ * NOTE: Must come BEFORE /:id routes to avoid route matching issues
+ */
+router.post('/generate', protect, async (req, res) => {
+  try {
+    const { careerField } = req.body;
+
+    if (!careerField) {
+      return res.status(400).json({
+        success: false,
+        error: 'careerField is required'
+      });
+    }
+
+    // Call n8n webhook
+    const n8nResponse = await fetch(process.env.N8N_ROADMAP_WEBHOOK_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        careerField,
+        userId: req.user.id,
+        token: req.headers.authorization.replace('Bearer ', '')
+      })
+    });
+
+    if (!n8nResponse.ok) {
+      throw new Error(`N8N workflow failed: ${n8nResponse.statusText}`);
+    }
+
+    const result = await n8nResponse.json();
+
+    res.json({
+      success: true,
+      message: 'Roadmap generation started',
+      workflowStatus: result
+    });
+
+  } catch (error) {
+    console.error('Error triggering n8n workflow:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
 
 /**
  * POST /api/roadmaps
  * Create a new roadmap in MongoDB
  * Called by n8n workflow after AI generation
  */
-router.post('/', auth, async (req, res) => {
+router.post('/', protect, async (req, res) => {
   try {
     const {
       careerField,
@@ -140,7 +191,7 @@ router.get('/', async (req, res) => {
  * GET /api/roadmaps/user/:userId
  * Get all roadmaps created by a specific user
  */
-router.get('/user/:userId', auth, async (req, res) => {
+router.get('/user/:userId', protect, async (req, res) => {
   try {
     // Only allow users to see their own roadmaps unless they're admin
     if (req.user.id !== req.params.userId && req.user.role !== 'admin') {
@@ -170,7 +221,7 @@ router.get('/user/:userId', auth, async (req, res) => {
  * PUT /api/roadmaps/:id
  * Update a roadmap (for user modifications)
  */
-router.put('/:id', auth, async (req, res) => {
+router.put('/:id', protect, async (req, res) => {
   try {
     const roadmap = await Roadmap.findById(req.params.id);
 
@@ -218,7 +269,7 @@ router.put('/:id', auth, async (req, res) => {
  * DELETE /api/roadmaps/:id
  * Delete a roadmap
  */
-router.delete('/:id', auth, async (req, res) => {
+router.delete('/:id', protect, async (req, res) => {
   try {
     const roadmap = await Roadmap.findById(req.params.id);
 
@@ -277,56 +328,6 @@ router.post('/:id/mark-helpful', async (req, res) => {
     });
 
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      error: error.message
-    });
-  }
-});
-
-/**
- * POST /api/roadmaps/generate
- * Webhook endpoint that receives requests from n8n
- * This triggers the workflow
- */
-router.post('/generate', auth, async (req, res) => {
-  try {
-    const { careerField } = req.body;
-
-    if (!careerField) {
-      return res.status(400).json({
-        success: false,
-        error: 'careerField is required'
-      });
-    }
-
-    // Call n8n webhook
-    const n8nResponse = await fetch(process.env.N8N_ROADMAP_WEBHOOK_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        careerField,
-        userId: req.user.id,
-        token: req.headers.authorization.replace('Bearer ', '')
-      })
-    });
-
-    if (!n8nResponse.ok) {
-      throw new Error(`N8N workflow failed: ${n8nResponse.statusText}`);
-    }
-
-    const result = await n8nResponse.json();
-
-    res.json({
-      success: true,
-      message: 'Roadmap generation started',
-      workflowStatus: result
-    });
-
-  } catch (error) {
-    console.error('Error triggering n8n workflow:', error);
     res.status(500).json({
       success: false,
       error: error.message
