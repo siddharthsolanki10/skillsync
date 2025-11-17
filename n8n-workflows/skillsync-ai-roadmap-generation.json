@@ -1,0 +1,285 @@
+{
+  "name": "SkillSync - AI Roadmap Generation Workflow",
+  "description": "Complete n8n workflow for generating career roadmaps using AI, storing in MongoDB, and returning to React frontend",
+  "tags": ["roadmap", "AI", "MongoDB", "REST API"],
+  "nodes": [
+    {
+      "parameters": {
+        "path": "e9f3d4a1-2b5c-4d7e-8f9a-0c1d2e3f4a5b",
+        "httpMethod": "POST",
+        "responseMode": "onReceived",
+        "options": {}
+      },
+      "id": "Webhook_Trigger",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [100, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openai.com/v1/chat/completions",
+        "authentication": "genericCredentialType",
+        "genericCredentialType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{ $secrets.OPENAI_API_KEY }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "model",
+              "value": "gpt-4"
+            },
+            {
+              "name": "messages",
+              "value": "[{\"role\": \"user\", \"content\": \"Generate a comprehensive career roadmap in JSON format for: {{ $node[\\\"Webhook_Trigger\\\"].json.body.careerField }}. Include phases, skills, resources, and time estimates. Return ONLY valid JSON.\"}]"
+            },
+            {
+              "name": "temperature",
+              "value": "0.7"
+            },
+            {
+              "name": "max_tokens",
+              "value": "4000"
+            }
+          ]
+        }
+      },
+      "id": "OpenAI_Call",
+      "name": "Call OpenAI GPT-4",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [300, 300]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Parse OpenAI response and extract JSON\nconst response = items[0].json.body;\nconst content = response.choices[0].message.content;\n\n// Remove markdown code blocks if present\nlet jsonStr = content.replace(/```json\\n?/g, '').replace(/```\\n?/g, '');\n\ntry {\n  const roadmapData = JSON.parse(jsonStr);\n  return {\n    roadmap: roadmapData,\n    careerField: \"{{ $node[\\\"Webhook_Trigger\\\"].json.body.careerField }}\",\n    generatedAt: new Date().toISOString(),\n    success: true\n  };\n} catch (error) {\n  return {\n    error: `Failed to parse JSON: ${error.message}`,\n    rawContent: content,\n    success: false\n  };\n}"
+      },
+      "id": "Parse_JSON",
+      "name": "Parse & Prepare Data",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [500, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "{{ $secrets.BACKEND_URL }}/api/roadmaps",
+        "authentication": "genericCredentialType",
+        "genericCredentialType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "value": "Bearer {{ $node[\\\"Webhook_Trigger\\\"].json.body.token }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "careerField",
+              "value": "{{ $node[\\\"Parse_JSON\\\"].json.careerField }}"
+            },
+            {
+              "name": "title",
+              "value": "{{ $node[\\\"Parse_JSON\\\"].json.roadmap.title }}"
+            },
+            {
+              "name": "description",
+              "value": "{{ $node[\\\"Parse_JSON\\\"].json.roadmap.description }}"
+            },
+            {
+              "name": "stages",
+              "value": "{{ $node[\\\"Parse_JSON\\\"].json.roadmap.stages }}"
+            },
+            {
+              "name": "resources",
+              "value": "{{ $node[\\\"Parse_JSON\\\"].json.roadmap.resources }}"
+            },
+            {
+              "name": "dailyChecklist",
+              "value": "{{ $node[\\\"Parse_JSON\\\"].json.roadmap.dailyChecklist }}"
+            },
+            {
+              "name": "generatedAt",
+              "value": "{{ $node[\\\"Parse_JSON\\\"].json.generatedAt }}"
+            }
+          ]
+        }
+      },
+      "id": "Save_to_MongoDB",
+      "name": "Save to MongoDB (via API)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [700, 300]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Check if save was successful\nconst response = items[0].json.body;\n\nif (response.success === false || response.error) {\n  throw new Error(`Failed to save roadmap: ${response.message || 'Unknown error'}`);\n}\n\nreturn {\n  roadmapId: response.roadmapId,\n  message: 'Roadmap saved successfully',\n  careerField: \"{{ $node[\\\"Parse_JSON\\\"].json.careerField }}\",\n  title: response.title,\n  phases: response.stages.length,\n  success: true\n};"
+      },
+      "id": "Validate_Save",
+      "name": "Validate Save Response",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [900, 300]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "e9f3d4a1-2b5c-4d7e-8f9a-0c1d2e3f4a5b",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "Webhook_Response",
+      "name": "Send Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1100, 300]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Format final response for React frontend\nreturn {\n  status: 'success',\n  data: {\n    roadmapId: \"{{ $node[\\\"Validate_Save\\\"].json.roadmapId }}\",\n    careerField: \"{{ $node[\\\"Validate_Save\\\"].json.careerField }}\",\n    title: \"{{ $node[\\\"Validate_Save\\\"].json.title }}\",\n    phasesCount: \"{{ $node[\\\"Validate_Save\\\"].json.phases }}\",\n    message: \"Roadmap generated and saved successfully\",\n    timestamp: new Date().toISOString()\n  }\n};"
+      },
+      "id": "Format_Response",
+      "name": "Format Final Response",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [900, 450]
+    }
+  ],
+  "connections": {
+    "Webhook_Trigger": {
+      "main": [
+        [
+          {
+            "node": "OpenAI_Call",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI_Call": {
+      "main": [
+        [
+          {
+            "node": "Parse_JSON",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse_JSON": {
+      "main": [
+        [
+          {
+            "node": "Save_to_MongoDB",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save_to_MongoDB": {
+      "main": [
+        [
+          {
+            "node": "Validate_Save",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate_Save": {
+      "main": [
+        [
+          {
+            "node": "Format_Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format_Response": {
+      "main": [
+        [
+          {
+            "node": "Webhook_Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "errorHandler": {
+      "type": "custom",
+      "message": "Error in roadmap generation workflow"
+    },
+    "timeout": 300
+  },
+  "flowChart": {
+    "title": "SkillSync Roadmap Generation Flow",
+    "stages": [
+      {
+        "name": "Webhook Trigger",
+        "description": "React frontend sends career field selection",
+        "input": {"careerField": "string", "userId": "string", "token": "JWT"}
+      },
+      {
+        "name": "OpenAI API Call",
+        "description": "AI generates comprehensive roadmap JSON",
+        "input": "careerField from webhook",
+        "output": "Structured roadmap data"
+      },
+      {
+        "name": "Parse & Validate",
+        "description": "Extract and validate JSON from AI response",
+        "input": "OpenAI response",
+        "output": "Cleaned roadmap object"
+      },
+      {
+        "name": "Save to MongoDB",
+        "description": "Store roadmap in database via backend API",
+        "input": "Roadmap data",
+        "output": "MongoDB document ID"
+      },
+      {
+        "name": "Validate & Format",
+        "description": "Verify save success and format response",
+        "input": "MongoDB save response",
+        "output": "Final response object"
+      },
+      {
+        "name": "Send to React",
+        "description": "Return successful response to frontend",
+        "input": "Formatted response",
+        "output": "JSON to React component"
+      }
+    ]
+  }
+}

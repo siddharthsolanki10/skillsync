@@ -1,0 +1,826 @@
+{
+  "title": "Full Stack Web Development Roadmap",
+  "description": "Complete guide to becoming a Full Stack Web Developer",
+  "duration": "6-9 months",
+  "difficulty": "Beginner to Advanced",
+  "introduction": "Full Stack Web Development involves building both front-end (user interface) and back-end (server logic) of web applications. This roadmap will guide you from basic web concepts to building production-ready applications with React, Node.js, and MongoDB.",
+  "stages": [
+    {
+      "name": "Phase 1: Web Fundamentals (Weeks 1-4)",
+      "description": "Master the foundation of web development",
+      "skills": [
+        {
+          "id": "html-basics",
+          "name": "HTML5 Essentials",
+          "description": "Learn semantic HTML5, forms, accessibility (a11y), and structure. Understand meta tags, document structure, and SEO basics. Master form validation and input types.",
+          "time_required": "1 week",
+          "level": "Beginner",
+          "prerequisites": [],
+          "keyTopics": ["Semantic HTML", "Forms & Validation", "Accessibility", "Meta Tags", "SEO Basics"],
+          "summary": "HTML5 is the markup language that structures web content. Learn semantic elements like <header>, <main>, <article> to create accessible, SEO-friendly pages. Master forms for user input and validation attributes.",
+          "resources": {
+            "free": [
+              {"title": "MDN Web Docs - HTML", "link": "https://developer.mozilla.org/en-US/docs/Web/HTML", "why": "Official reference with best practices"},
+              {"title": "FreeCodeCamp HTML Tutorial", "link": "https://www.youtube.com/watch?v=qz0aGYrrlhU", "why": "Comprehensive video tutorial"},
+              {"title": "HTML.com", "link": "https://html.com/", "why": "Quick reference guide"}
+            ],
+            "paid": [
+              {"title": "The Complete Web Developer Bootcamp 2024", "platform": "Udemy", "price": "$12-15", "why": "Covers HTML with real projects"}
+            ]
+          },
+          "practicalTasks": [
+            "Create a semantic HTML page for a restaurant website",
+            "Build a contact form with validation",
+            "Create an accessible navigation menu"
+          ],
+          "commonMistakes": [
+            "Using divs instead of semantic elements",
+            "Not using proper heading hierarchy (h1 → h6)",
+            "Ignoring accessibility attributes (alt, aria-labels)"
+          ]
+        },
+        {
+          "id": "css-basics",
+          "name": "CSS3 & Styling",
+          "description": "Master CSS selectors, box model, flexbox, CSS Grid, responsive design, and animations. Learn preprocessors like Sass. Understand media queries and mobile-first approach.",
+          "time_required": "1.5 weeks",
+          "level": "Beginner",
+          "prerequisites": ["html-basics"],
+          "keyTopics": ["Selectors & Specificity", "Box Model", "Flexbox", "CSS Grid", "Responsive Design", "Animations", "Sass/SCSS"],
+          "summary": "CSS styles HTML elements and creates responsive layouts. Master Flexbox and CSS Grid for modern layouts, media queries for responsiveness, and animations for interactivity. Learn Sass for maintainable stylesheets.",
+          "resources": {
+            "free": [
+              {"title": "MDN CSS Guide", "link": "https://developer.mozilla.org/en-US/docs/Web/CSS", "why": "Comprehensive CSS reference"},
+              {"title": "CSS-Tricks", "link": "https://css-tricks.com/", "why": "Advanced tips and guides"},
+              {"title": "FreeCodeCamp CSS Tutorial", "link": "https://www.youtube.com/watch?v=ieTHC78giGQ", "why": "Practical video series"}
+            ],
+            "paid": [
+              {"title": "CSS Complete Guide 2024", "platform": "Udemy", "price": "$12-15", "why": "Master Flexbox, Grid, and animations"}
+            ]
+          },
+          "practicalTasks": [
+            "Create a responsive portfolio website",
+            "Build a dashboard layout with CSS Grid",
+            "Create animated loading spinners",
+            "Design a mobile-first e-commerce page"
+          ],
+          "commonMistakes": [
+            "Not understanding CSS specificity leading to override issues",
+            "Mixing Flexbox and Grid inappropriately",
+            "Not testing responsive design on multiple devices"
+          ]
+        },
+        {
+          "id": "javascript-basics",
+          "name": "JavaScript Fundamentals",
+          "description": "Learn JavaScript syntax, variables, data types, operators, control flow, functions, and DOM manipulation. Understand ES6+ features like arrow functions, destructuring, and spread operator.",
+          "time_required": "2 weeks",
+          "level": "Beginner",
+          "prerequisites": ["html-basics"],
+          "keyTopics": ["Variables & Data Types", "Operators", "Control Flow", "Functions", "Array Methods", "Object Methods", "DOM Manipulation", "ES6+ Features"],
+          "summary": "JavaScript brings interactivity to web pages. Master variables, functions, and DOM manipulation to create dynamic user experiences. Learn ES6+ features for modern, cleaner code.",
+          "resources": {
+            "free": [
+              {"title": "JavaScript.info", "link": "https://javascript.info/", "why": "Best JavaScript tutorial online"},
+              {"title": "FreeCodeCamp JavaScript Course", "link": "https://www.youtube.com/watch?v=jS4aFq5-91o", "why": "Complete 4-hour course"},
+              {"title": "MDN JavaScript Guide", "link": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide", "why": "Official documentation"}
+            ],
+            "paid": [
+              {"title": "The Complete JavaScript Course 2024", "platform": "Udemy", "price": "$12-15", "why": "Comprehensive with projects"}
+            ]
+          },
+          "practicalTasks": [
+            "Build a to-do list application",
+            "Create a calculator with DOM manipulation",
+            "Build a weather app API (using free API)",
+            "Create an interactive quiz game"
+          ],
+          "commonMistakes": [
+            "Not understanding scope and closures",
+            "Synchronous thinking for async operations",
+            "Not using const/let (still using var)"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Phase 2: Advanced Frontend (Weeks 5-9)",
+      "description": "Build interactive UIs with modern frameworks",
+      "skills": [
+        {
+          "id": "javascript-advanced",
+          "name": "Advanced JavaScript",
+          "description": "Master async/await, promises, callbacks, error handling, REST APIs, and fetch API. Learn event handling, event delegation, and browser APIs. Understand OOP and functional programming concepts.",
+          "time_required": "1.5 weeks",
+          "level": "Intermediate",
+          "prerequisites": ["javascript-basics"],
+          "keyTopics": ["Promises & Async/Await", "Fetch API", "Error Handling", "Event Handling", "OOP Concepts", "Functional Programming"],
+          "summary": "Advanced JavaScript enables asynchronous operations and API integration. Learn promises and async/await to handle network requests, error handling for robust applications, and OOP for scalable code.",
+          "resources": {
+            "free": [
+              {"title": "Promises & Async/Await - JavaScript.info", "link": "https://javascript.info/async", "why": "Clear explanation of async patterns"},
+              {"title": "Fetch API Tutorial", "link": "https://www.youtube.com/watch?v=cuEtnrL9-H0", "why": "Practical fetch examples"}
+            ],
+            "paid": [
+              {"title": "Advanced JavaScript Concepts", "platform": "Udemy", "price": "$12-15", "why": "Deep dive into async and OOP"}
+            ]
+          },
+          "practicalTasks": [
+            "Fetch data from public APIs and display it",
+            "Create error handling for API calls",
+            "Build a search functionality with debouncing",
+            "Create a form with validation and submission"
+          ],
+          "commonMistakes": [
+            "Not catching promise rejections",
+            "Mixing callbacks with async/await",
+            "Not understanding event bubbling"
+          ]
+        },
+        {
+          "id": "react-basics",
+          "name": "React Fundamentals",
+          "description": "Learn React components (functional & class), JSX, hooks (useState, useEffect), props, state management basics, and component lifecycle. Understand virtual DOM and re-rendering.",
+          "time_required": "2 weeks",
+          "level": "Intermediate",
+          "prerequisites": ["javascript-advanced"],
+          "keyTopics": ["Components & JSX", "Hooks", "Props & State", "Event Handling", "Conditional Rendering", "Lists & Keys"],
+          "summary": "React is a library for building UI components. Learn functional components with hooks, state management with useState, side effects with useEffect, and component composition for reusable, maintainable UIs.",
+          "resources": {
+            "free": [
+              {"title": "Official React Tutorial", "link": "https://react.dev/learn", "why": "Best learning resource for React"},
+              {"title": "FreeCodeCamp React Course", "link": "https://www.youtube.com/watch?v=FJDVKeh7RJI", "why": "Comprehensive video course"},
+              {"title": "React Docs", "link": "https://react.dev/reference", "why": "Official API reference"}
+            ],
+            "paid": [
+              {"title": "React - The Complete Guide 2024", "platform": "Udemy", "price": "$12-15", "why": "Most comprehensive React course"}
+            ]
+          },
+          "practicalTasks": [
+            "Build a counter component",
+            "Create a form component with validation",
+            "Build a todo list with add/delete functionality",
+            "Create a component that fetches and displays API data"
+          ],
+          "commonMistakes": [
+            "Modifying state directly instead of using setState",
+            "Not using key prop in lists",
+            "Missing dependencies in useEffect"
+          ]
+        },
+        {
+          "id": "react-advanced",
+          "name": "Advanced React & State Management",
+          "description": "Master context API, Redux/Zustand for state management, custom hooks, performance optimization (memo, useMemo, useCallback), code splitting, and lazy loading. Learn React Router for multi-page apps.",
+          "time_required": "2 weeks",
+          "level": "Intermediate-Advanced",
+          "prerequisites": ["react-basics"],
+          "keyTopics": ["Context API", "Redux/Zustand", "Custom Hooks", "Performance Optimization", "React Router", "Code Splitting"],
+          "summary": "Advanced React handles complex state management across components. Learn Redux or Zustand for centralized state, custom hooks for reusable logic, React Router for navigation, and optimization techniques for performance.",
+          "resources": {
+            "free": [
+              {"title": "Redux Official Tutorial", "link": "https://redux.js.org/tutorials/index", "why": "Comprehensive Redux guide"},
+              {"title": "Context API Guide", "link": "https://react.dev/reference/react/useContext", "why": "Official Context documentation"},
+              {"title": "React Router Docs", "link": "https://reactrouter.com/", "why": "Official routing documentation"}
+            ],
+            "paid": [
+              {"title": "Redux & React Router Masterclass", "platform": "Udemy", "price": "$12-15", "why": "Advanced state management"}
+            ]
+          },
+          "practicalTasks": [
+            "Refactor a project to use Redux",
+            "Create custom hooks (useLocalStorage, useFetch, useDebounce)",
+            "Build a multi-page app with React Router",
+            "Implement lazy loading for large lists"
+          ],
+          "commonMistakes": [
+            "Over-engineering with Redux for simple state",
+            "Not memoizing expensive computations",
+            "Creating new functions on every render"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Phase 3: Backend Development (Weeks 10-14)",
+      "description": "Build server logic and APIs",
+      "skills": [
+        {
+          "id": "node-basics",
+          "name": "Node.js & Express Basics",
+          "description": "Learn Node.js runtime, npm/yarn package management, Express framework, routing, middleware, request/response handling, and basic server setup. Understand event-driven architecture.",
+          "time_required": "1.5 weeks",
+          "level": "Beginner",
+          "prerequisites": ["javascript-advanced"],
+          "keyTopics": ["Node.js Basics", "Express Setup", "Routing", "Middleware", "Request/Response", "Error Handling"],
+          "summary": "Node.js runs JavaScript on servers. Express is a minimal framework for building REST APIs. Learn routing to handle requests, middleware for cross-cutting concerns, and error handling for robust servers.",
+          "resources": {
+            "free": [
+              {"title": "Node.js Official Docs", "link": "https://nodejs.org/en/docs/", "why": "Official documentation"},
+              {"title": "Express Official Guide", "link": "https://expressjs.com/", "why": "Comprehensive Express documentation"},
+              {"title": "FreeCodeCamp Node.js & Express", "link": "https://www.youtube.com/watch?v=Oe421EPjeBE", "why": "Beginner-friendly video course"}
+            ],
+            "paid": [
+              {"title": "The Complete Node.js Developer Course", "platform": "Udemy", "price": "$12-15", "why": "Comprehensive Node.js guide"}
+            ]
+          },
+          "practicalTasks": [
+            "Create a basic Express server",
+            "Build CRUD endpoints for a resource",
+            "Implement custom middleware",
+            "Create error handling middleware"
+          ],
+          "commonMistakes": [
+            "Not handling errors properly",
+            "Blocking operations in routes",
+            "Not using environment variables for config"
+          ]
+        },
+        {
+          "id": "database-sql",
+          "name": "Database Fundamentals (SQL & MongoDB)",
+          "description": "Learn database concepts, SQL queries (SELECT, INSERT, UPDATE, DELETE), MongoDB NoSQL, schema design, relationships, indexing, and performance optimization. Understand ACID properties and CAP theorem.",
+          "time_required": "1.5 weeks",
+          "level": "Intermediate",
+          "prerequisites": [],
+          "keyTopics": ["SQL Basics", "MongoDB", "Schema Design", "Relationships", "Queries", "Indexing", "Performance"],
+          "summary": "Databases store and retrieve data. Learn SQL for relational databases and MongoDB for NoSQL. Understand schema design for data integrity, queries for retrieval, and indexing for performance.",
+          "resources": {
+            "free": [
+              {"title": "MongoDB University - Free Courses", "link": "https://learn.mongodb.com/", "why": "Official MongoDB learning platform"},
+              {"title": "SQL Tutorial - W3Schools", "link": "https://www.w3schools.com/sql/", "why": "Interactive SQL tutorial"},
+              {"title": "FreeCodeCamp MongoDB Course", "link": "https://www.youtube.com/watch?v=ofme2o6rvzs", "why": "Complete MongoDB guide"}
+            ],
+            "paid": [
+              {"title": "The Complete SQL Bootcamp 2024", "platform": "Udemy", "price": "$12-15", "why": "Comprehensive SQL course"}
+            ]
+          },
+          "practicalTasks": [
+            "Design a database schema for an e-commerce app",
+            "Write complex SQL queries",
+            "Create MongoDB collections and documents",
+            "Implement database relationships and constraints"
+          ],
+          "commonMistakes": [
+            "Poor database design causing N+1 queries",
+            "Not normalizing SQL databases",
+            "Missing indexes on frequently queried fields"
+          ]
+        },
+        {
+          "id": "authentication",
+          "name": "Authentication & Authorization",
+          "description": "Learn JWT tokens, sessions, bcrypt password hashing, OAuth 2.0, user registration/login flows, role-based access control (RBAC), and security best practices. Understand CORS and HTTPS.",
+          "time_required": "1 week",
+          "level": "Intermediate",
+          "prerequisites": ["node-basics"],
+          "keyTopics": ["JWT Tokens", "Password Hashing", "Sessions", "OAuth", "RBAC", "CORS", "HTTPS"],
+          "summary": "Authentication verifies user identity; authorization controls access. Learn JWT for stateless auth, bcrypt for secure passwords, OAuth for third-party logins, and RBAC for permission management.",
+          "resources": {
+            "free": [
+              {"title": "JWT.io Introduction", "link": "https://jwt.io/introduction", "why": "Clear JWT explanation"},
+              {"title": "OAuth 2.0 Simplified", "link": "https://aaronparecki.com/oauth-2-simplified/", "why": "Easy OAuth guide"},
+              {"title": "OWASP Security Practices", "link": "https://owasp.org/", "why": "Security best practices"}
+            ],
+            "paid": [
+              {"title": "Authentication & Authorization in Node.js", "platform": "Udemy", "price": "$12-15", "why": "Complete auth guide"}
+            ]
+          },
+          "practicalTasks": [
+            "Implement JWT-based authentication",
+            "Build user registration and login endpoints",
+            "Implement role-based access control",
+            "Add OAuth with Google/GitHub"
+          ],
+          "commonMistakes": [
+            "Storing passwords in plain text",
+            "Not validating JWT signatures",
+            "Hardcoding secrets in code"
+          ]
+        },
+        {
+          "id": "api-design",
+          "name": "RESTful API Design",
+          "description": "Learn REST principles, HTTP methods (GET, POST, PUT, DELETE), status codes, request/response formats, API versioning, documentation (Swagger/OpenAPI), and best practices. Understand pagination and filtering.",
+          "time_required": "1 week",
+          "level": "Intermediate",
+          "prerequisites": ["node-basics"],
+          "keyTopics": ["REST Principles", "HTTP Methods", "Status Codes", "Request/Response", "Pagination", "Filtering", "API Documentation"],
+          "summary": "REST APIs follow conventions for CRUD operations using HTTP methods. Learn status codes for responses, pagination for large datasets, filtering for queries, and Swagger for documentation.",
+          "resources": {
+            "free": [
+              {"title": "REST API Best Practices - MDN", "link": "https://developer.mozilla.org/en-US/docs/Glossary/REST", "why": "Official REST guide"},
+              {"title": "Swagger/OpenAPI Tutorial", "link": "https://swagger.io/tools/swagger-ui/", "why": "API documentation tools"}
+            ],
+            "paid": [
+              {"title": "RESTful Web Services Design", "platform": "Udemy", "price": "$12-15", "why": "API design principles"}
+            ]
+          },
+          "practicalTasks": [
+            "Design a RESTful API for a blog",
+            "Implement pagination and filtering",
+            "Create API documentation with Swagger",
+            "Design error responses with proper status codes"
+          ],
+          "commonMistakes": [
+            "Using wrong HTTP methods for operations",
+            "Not versioning API endpoints",
+            "Poor error message documentation"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Phase 4: Database & Integration (Weeks 15-18)",
+      "description": "Master databases and connect everything",
+      "skills": [
+        {
+          "id": "mongoose-orm",
+          "name": "Mongoose ODM & Database Integration",
+          "description": "Learn Mongoose for MongoDB interaction, schema definition, validation, hooks, population, aggregation pipeline, and query optimization. Understand relationships and data modeling.",
+          "time_required": "1.5 weeks",
+          "level": "Intermediate",
+          "prerequisites": ["database-sql"],
+          "keyTopics": ["Schema Definition", "Validation", "Hooks", "Population", "Aggregation", "Query Optimization"],
+          "summary": "Mongoose provides schema validation and query helpers for MongoDB. Learn schema design, data validation, hooks for side effects, and aggregation for complex queries.",
+          "resources": {
+            "free": [
+              {"title": "Mongoose Official Docs", "link": "https://mongoosejs.com/", "why": "Official documentation"},
+              {"title": "Mongoose Tutorial - FreeCodeCamp", "link": "https://www.youtube.com/watch?v=DZBGEVgL5eU", "why": "Complete Mongoose guide"}
+            ],
+            "paid": [
+              {"title": "MERN Stack Masterclass", "platform": "Udemy", "price": "$12-15", "why": "Full MERN stack with Mongoose"}
+            ]
+          },
+          "practicalTasks": [
+            "Create Mongoose schemas for a blog app",
+            "Implement schema validation",
+            "Build relationships with population",
+            "Write aggregation pipelines for analytics"
+          ],
+          "commonMistakes": [
+            "Creating schemas without validation",
+            "N+1 query problems without population",
+            "Not indexing frequently queried fields"
+          ]
+        },
+        {
+          "id": "backend-integration",
+          "name": "Backend Integration & Testing",
+          "description": "Learn integration testing with Jest/Mocha, unit testing, mocking dependencies, integration testing with databases, API testing with Postman/Insomnia. Understand CI/CD pipelines.",
+          "time_required": "1 week",
+          "level": "Intermediate",
+          "prerequisites": ["node-basics"],
+          "keyTopics": ["Unit Testing", "Integration Testing", "Jest/Mocha", "Mocking", "API Testing", "CI/CD"],
+          "summary": "Testing ensures code quality and prevents bugs. Learn unit tests for individual functions, integration tests for API endpoints, and CI/CD for automated testing and deployment.",
+          "resources": {
+            "free": [
+              {"title": "Jest Official Docs", "link": "https://jestjs.io/", "why": "Jest testing framework"},
+              {"title": "Testing Node.js - FreeCodeCamp", "link": "https://www.youtube.com/watch?v=u5cLK1UR_Ww", "why": "Complete testing guide"}
+            ],
+            "paid": [
+              {"title": "Node.js Testing Mastery", "platform": "Udemy", "price": "$12-15", "why": "Advanced testing patterns"}
+            ]
+          },
+          "practicalTasks": [
+            "Write unit tests for utility functions",
+            "Create integration tests for API endpoints",
+            "Mock external API calls",
+            "Setup CI/CD pipeline with GitHub Actions"
+          ],
+          "commonMistakes": [
+            "Testing implementation instead of behavior",
+            "Not mocking external dependencies",
+            "Missing edge case tests"
+          ]
+        },
+        {
+          "id": "deployment",
+          "name": "Deployment & DevOps Basics",
+          "description": "Learn deployment to cloud platforms (Heroku, Vercel, AWS), environment configuration, Docker basics, process management with PM2, monitoring and logging, and scaling strategies.",
+          "time_required": "1.5 weeks",
+          "level": "Intermediate",
+          "prerequisites": ["node-basics"],
+          "keyTopics": ["Docker", "Cloud Deployment", "Environment Config", "Process Management", "Monitoring", "Logging"],
+          "summary": "Deployment moves applications to production. Learn Docker for containerization, cloud platforms for hosting, environment management for different stages, and monitoring for production issues.",
+          "resources": {
+            "free": [
+              {"title": "Docker Official Tutorial", "link": "https://docs.docker.com/get-started/", "why": "Interactive Docker tutorial"},
+              {"title": "Vercel Deployment Guide", "link": "https://vercel.com/docs", "why": "Easy deployment documentation"}
+            ],
+            "paid": [
+              {"title": "Docker for Developers", "platform": "Udemy", "price": "$12-15", "why": "Complete Docker guide"}
+            ]
+          },
+          "practicalTasks": [
+            "Create a Dockerfile for Node.js app",
+            "Deploy to Vercel or Netlify",
+            "Setup environment variables for production",
+            "Configure GitHub Actions for CI/CD",
+            "Setup monitoring and alerting"
+          ],
+          "commonMistakes": [
+            "Committing secrets to version control",
+            "Not using environment variables",
+            "Not setting resource limits"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Phase 5: Full Stack Integration (Weeks 19-24)",
+      "description": "Build complete applications and master full stack development",
+      "skills": [
+        {
+          "id": "full-stack-project-1",
+          "name": "Project 1: E-Commerce Platform",
+          "description": "Build a complete e-commerce application with user authentication, product catalog, shopping cart, payment integration (Stripe), order management, admin dashboard, and reviews/ratings. Use React, Node.js, MongoDB.",
+          "time_required": "3 weeks",
+          "level": "Advanced",
+          "prerequisites": ["react-advanced", "mongoose-orm", "authentication"],
+          "keyTopics": ["Full Stack Architecture", "Payment Integration", "Admin Dashboard", "Product Management", "Order Processing"],
+          "summary": "An e-commerce platform integrates frontend and backend. Build a complete system with user auth, product management, shopping cart, payment processing with Stripe, and order tracking.",
+          "resources": {
+            "free": [
+              {"title": "MERN E-commerce Course", "link": "https://www.youtube.com/watch?v=U_E32t2UmoI", "why": "Complete e-commerce tutorial"}
+            ],
+            "paid": [
+              {"title": "Ecommerce with MERN Stack", "platform": "Udemy", "price": "$12-15", "why": "Professional e-commerce build"}
+            ]
+          },
+          "practicalTasks": [
+            "Setup frontend and backend repositories",
+            "Implement user authentication",
+            "Build product catalog with filtering",
+            "Integrate Stripe for payments",
+            "Create admin dashboard for order management"
+          ],
+          "commonMistakes": [
+            "Handling payment securely",
+            "Poor state management across pages",
+            "Not handling race conditions in checkout"
+          ]
+        },
+        {
+          "id": "full-stack-project-2",
+          "name": "Project 2: Social Media App",
+          "description": "Build a social networking platform with user profiles, feeds, real-time notifications using WebSockets, image uploads, comments/likes, follow system, and messaging. Use React, Node.js, MongoDB, Socket.io.",
+          "time_required": "3 weeks",
+          "level": "Advanced",
+          "prerequisites": ["react-advanced", "mongoose-orm"],
+          "keyTopics": ["Real-time Communication", "WebSockets", "File Uploads", "Social Features", "Notifications"],
+          "summary": "A social app connects users with feeds, messaging, and real-time updates. Master WebSockets for live notifications, file uploads for images, and complex data relationships.",
+          "resources": {
+            "free": [
+              {"title": "Socket.io Documentation", "link": "https://socket.io/docs/", "why": "Real-time communication"},
+              {"title": "Social Media App Tutorial", "link": "https://www.youtube.com/watch?v=rNN5vJRYvKU", "why": "Complete social app build"}
+            ],
+            "paid": [
+              {"title": "Social Network MERN App", "platform": "Udemy", "price": "$12-15", "why": "Full social platform build"}
+            ]
+          },
+          "practicalTasks": [
+            "Design database schema for users and posts",
+            "Build user profile and feed system",
+            "Implement real-time notifications with Socket.io",
+            "Create image upload functionality",
+            "Build direct messaging system"
+          ],
+          "commonMistakes": [
+            "Not scaling WebSocket connections",
+            "Security issues with file uploads",
+            "Poor database queries for feeds"
+          ]
+        },
+        {
+          "id": "performance-security",
+          "name": "Performance Optimization & Security Hardening",
+          "description": "Learn performance monitoring, caching strategies (Redis), CDN usage, database query optimization, frontend bundle optimization, security best practices (XSS, CSRF, SQL injection prevention), and penetration testing basics.",
+          "time_required": "1.5 weeks",
+          "level": "Advanced",
+          "prerequisites": ["backend-integration"],
+          "keyTopics": ["Caching", "CDN", "Query Optimization", "Bundle Optimization", "Security Vulnerabilities", "Penetration Testing"],
+          "summary": "Optimize performance with caching and CDN, secure apps against common attacks like XSS and CSRF. Learn monitoring and profiling to identify bottlenecks.",
+          "resources": {
+            "free": [
+              {"title": "OWASP Security Top 10", "link": "https://owasp.org/www-project-top-ten/", "why": "Security best practices"},
+              {"title": "Web Performance Optimization", "link": "https://developer.chrome.com/docs/lighthouse/", "why": "Performance analysis tools"}
+            ],
+            "paid": [
+              {"title": "Web Security & Performance", "platform": "Udemy", "price": "$12-15", "why": "Complete optimization guide"}
+            ]
+          },
+          "practicalTasks": [
+            "Setup Redis caching for frequently accessed data",
+            "Optimize database queries with indexing",
+            "Reduce React bundle size with code splitting",
+            "Implement security headers",
+            "Run security audit on application"
+          ],
+          "commonMistakes": [
+            "Caching without invalidation strategy",
+            "Not implementing rate limiting",
+            "Storing sensitive data in localStorage"
+          ]
+        }
+      ]
+    }
+  ],
+  "capstoneProject": {
+    "title": "Full Stack Social Learning Platform (SkillSync-like)",
+    "description": "Build a complete learning platform where users can create learning paths, track progress, get AI-generated roadmaps, collaborate with others, and earn certifications.",
+    "features": [
+      "User authentication with Google OAuth",
+      "AI-powered roadmap generation",
+      "Progress tracking with visualizations",
+      "Real-time collaboration features",
+      "Video integration and quizzes",
+      "Admin dashboard for content management",
+      "Payment system for premium features",
+      "Mobile-responsive design"
+    ],
+    "timeline": "4-6 weeks",
+    "technologies": ["React", "Redux", "Node.js", "Express", "MongoDB", "Mongoose", "Socket.io", "Stripe", "OpenAI API", "Docker"]
+  },
+  "resources": {
+    "free": [
+      {
+        "title": "MDN Web Docs",
+        "link": "https://developer.mozilla.org/",
+        "why": "Comprehensive web development documentation"
+      },
+      {
+        "title": "FreeCodeCamp",
+        "link": "https://www.freecodecamp.org/",
+        "why": "Free coding tutorials and certifications"
+      },
+      {
+        "title": "GitHub",
+        "link": "https://github.com/",
+        "why": "Version control and open source projects"
+      },
+      {
+        "title": "Stack Overflow",
+        "link": "https://stackoverflow.com/",
+        "why": "Q&A for debugging and solutions"
+      },
+      {
+        "title": "Dev.to",
+        "link": "https://dev.to/",
+        "why": "Community articles and tutorials"
+      },
+      {
+        "title": "CSS-Tricks",
+        "link": "https://css-tricks.com/",
+        "why": "Advanced CSS tutorials"
+      },
+      {
+        "title": "JavaScript.info",
+        "link": "https://javascript.info/",
+        "why": "Best JavaScript learning resource"
+      }
+    ],
+    "paid": [
+      {
+        "title": "The Complete Web Developer Bootcamp 2024",
+        "platform": "Udemy",
+        "price": "$12-15",
+        "instructor": "Colt Steele",
+        "why": "Most comprehensive bootcamp-style course"
+      },
+      {
+        "title": "React - The Complete Guide 2024",
+        "platform": "Udemy",
+        "price": "$12-15",
+        "instructor": "Maximilian Schwarzmüller",
+        "why": "Best React course with real projects"
+      },
+      {
+        "title": "The Complete Node.js Developer Course",
+        "platform": "Udemy",
+        "price": "$12-15",
+        "instructor": "Andrew Mead",
+        "why": "Comprehensive Node.js and backend"
+      },
+      {
+        "title": "Full Stack Web Developer Bootcamp",
+        "platform": "Coursera",
+        "price": "$39/month",
+        "university": "University at Buffalo",
+        "why": "University-level full stack training"
+      },
+      {
+        "title": "MERN Stack Masterclass",
+        "platform": "LinkedIn Learning",
+        "price": "$29.99/month",
+        "why": "Industry-standard MERN stack training"
+      }
+    ]
+  },
+  "dailyChecklist": {
+    "title": "30-Day Full Stack Mastery Checklist",
+    "phases": [
+      {
+        "week": "Week 1: HTML, CSS & JavaScript Basics",
+        "days": [
+          {
+            "day": "Day 1-2",
+            "tasks": [
+              "Learn HTML5 semantic elements and forms",
+              "Build a basic HTML page (restaurant website)",
+              "Practice form validation",
+              "Read 1 article on web accessibility"
+            ]
+          },
+          {
+            "day": "Day 3-4",
+            "tasks": [
+              "Master CSS selectors and box model",
+              "Build a responsive layout with Flexbox",
+              "Create mobile-first design",
+              "Practice CSS Grid for complex layouts"
+            ]
+          },
+          {
+            "day": "Day 5-7",
+            "tasks": [
+              "Learn JavaScript variables and data types",
+              "Practice array and object methods",
+              "Build a to-do list app with DOM manipulation",
+              "Learn ES6+ features (arrow functions, destructuring)"
+            ]
+          }
+        ]
+      },
+      {
+        "week": "Week 2: Advanced JavaScript & API Integration",
+        "days": [
+          {
+            "day": "Day 8-10",
+            "tasks": [
+              "Learn Promises and async/await",
+              "Practice with Fetch API",
+              "Build a weather app using free weather API",
+              "Implement error handling for API calls"
+            ]
+          },
+          {
+            "day": "Day 11-12",
+            "tasks": [
+              "Learn Event Delegation and bubbling",
+              "Build an interactive quiz app",
+              "Create form validation with regex",
+              "Practice debugging with DevTools"
+            ]
+          },
+          {
+            "day": "Day 13-14",
+            "tasks": [
+              "Learn OOP concepts in JavaScript",
+              "Build a movie search app with API",
+              "Create reusable utility functions",
+              "Complete a mini-project integrating APIs"
+            ]
+          }
+        ]
+      },
+      {
+        "week": "Week 3: React Fundamentals",
+        "days": [
+          {
+            "day": "Day 15-17",
+            "tasks": [
+              "Learn React components and JSX",
+              "Build a counter component",
+              "Practice useState hook",
+              "Create a form component"
+            ]
+          },
+          {
+            "day": "Day 18-19",
+            "tasks": [
+              "Learn useEffect for side effects",
+              "Fetch API data in React components",
+              "Build a list component with filtering",
+              "Practice conditional rendering"
+            ]
+          },
+          {
+            "day": "Day 20-21",
+            "tasks": [
+              "Build a complete todo list app",
+              "Practice props and component composition",
+              "Create custom hooks",
+              "Review React patterns and best practices"
+            ]
+          }
+        ]
+      },
+      {
+        "week": "Week 4: Backend Fundamentals",
+        "days": [
+          {
+            "day": "Day 22-24",
+            "tasks": [
+              "Setup Node.js and Express",
+              "Create basic Express server",
+              "Build CRUD endpoints",
+              "Learn routing and middleware"
+            ]
+          },
+          {
+            "day": "Day 25-26",
+            "tasks": [
+              "Learn MongoDB and Mongoose",
+              "Design database schema",
+              "Create models with validation",
+              "Build database queries"
+            ]
+          },
+          {
+            "day": "Day 27-30",
+            "tasks": [
+              "Implement JWT authentication",
+              "Build user registration/login endpoints",
+              "Connect React frontend to Node backend",
+              "Deploy a simple full-stack app"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "notesForLearners": {
+    "title": "Important Notes & Tips for Success",
+    "sections": [
+      {
+        "category": "Learning Strategy",
+        "points": [
+          "Don't skip fundamentals - they're crucial for advanced concepts",
+          "Code along with tutorials rather than just watching",
+          "Build projects to reinforce learning - theory alone isn't enough",
+          "Use the official documentation as your primary resource",
+          "Read and understand other people's code on GitHub"
+        ]
+      },
+      {
+        "category": "Common Mistakes",
+        "points": [
+          "Jumping to frameworks without learning JavaScript fundamentals",
+          "Not reading error messages - they tell you exactly what's wrong",
+          "Ignoring security practices (storing secrets, validating input, etc.)",
+          "Not testing code properly - leads to bugs in production",
+          "Over-engineering simple problems with unnecessary complexity",
+          "Not using version control (git) from the start"
+        ]
+      },
+      {
+        "category": "Staying Consistent",
+        "points": [
+          "Code every day, even if just 30 minutes",
+          "Join developer communities (Discord, Reddit, Dev.to)",
+          "Build projects that solve real problems",
+          "Share your work and get feedback",
+          "Celebrate small wins and progress",
+          "Don't compare your progress with others - everyone's journey is different"
+        ]
+      },
+      {
+        "category": "Industry Best Practices",
+        "points": [
+          "Always use version control (Git)",
+          "Write clean, readable code with proper naming",
+          "Add comments for complex logic",
+          "Test your code before pushing",
+          "Use environment variables for sensitive data",
+          "Document your code and APIs",
+          "Keep learning - technology evolves rapidly"
+        ]
+      },
+      {
+        "category": "Performance & Optimization",
+        "points": [
+          "Optimize database queries - use indexes, avoid N+1 queries",
+          "Use caching for frequently accessed data",
+          "Minimize bundle size with code splitting",
+          "Monitor and analyze performance regularly",
+          "Use lazy loading for images and components",
+          "Implement proper error handling and monitoring"
+        ]
+      },
+      {
+        "category": "Security Reminders",
+        "points": [
+          "Never commit secrets to version control",
+          "Always hash passwords with bcrypt",
+          "Validate and sanitize user input",
+          "Use HTTPS in production",
+          "Implement CORS properly",
+          "Keep dependencies updated for security patches",
+          "Use strong JWTs with proper expiration"
+        ]
+      }
+    ]
+  },
+  "summary": "This Full Stack Web Development roadmap provides a structured path from HTML/CSS/JavaScript basics through advanced backend development, database design, and deployment. Over 6-9 months, you'll progress through 5 phases: web fundamentals (HTML/CSS/JS), advanced frontend (JavaScript, React, state management), backend development (Node.js, Express, databases), database integration and testing, and finally full-stack projects. You'll build a portfolio including an e-commerce platform and social media app, learning modern technologies like React, Node.js, MongoDB, and deployment strategies. By the end, you'll be capable of building production-ready web applications, understanding the entire stack from user interface to database, and ready for junior full-stack developer positions. The journey emphasizes hands-on projects, real-world best practices, and continuous learning in a rapidly evolving field."
+}
